@@ -1,3 +1,6 @@
+//https://youtu.be/DX1HTfdA2Jo?si=ZcbemWIj7P3krhMx
+
+
 public class Main {
     public static void main(String[] args) {
         PersonalComputer personalComputer = new PersonalComputerImpl().setCPU("I5-10400F").build();
