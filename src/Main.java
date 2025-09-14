@@ -11,6 +11,10 @@ public class Main {
         Laptop netbook = Laptopfactory.createLaptop("NetBook");
         Laptop transformerlaptop = Laptopfactory.createLaptop("TransformerLaptop");
 
+        PersonalComputer gamingpc = pcfactory.createPersonalComputers("Gaming");
+        PersonalComputer officepc = pcfactory.createPersonalComputers("Office");
+        PersonalComputer monoblock = pcfactory.createPersonalComputers("Monoblock");
+
         System.out.println("Laptop factory created:");
         System.out.println("Gaming Laptop:");
 
@@ -42,9 +46,6 @@ public class Main {
         
         System.out.println("PersonalComputer factory created:");
 
-        PersonalComputer gamingpc = pcfactory.createPersonalComputers("Gaming");
-        PersonalComputer officepc = pcfactory.createPersonalComputers("Office");
-        PersonalComputer monoblock = pcfactory.createPersonalComputers("Monoblock");
 
         System.out.println("Gaming PC:");
 
