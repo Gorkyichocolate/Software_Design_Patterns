@@ -6,6 +6,7 @@ import Factory.Factory;
 import Laptop.Laptop;
 import PersonalComputer.PersonalComputer;
 
+
 public class Main {
     public static void main(String[] args) {
         Factory Laptopfactory = new AbstractFactory().createFactory("Laptop");
