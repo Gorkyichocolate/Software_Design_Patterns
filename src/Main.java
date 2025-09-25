@@ -1,42 +1,19 @@
+import MacOS.*;
+import Windows11.*;
+import Target.*;
+
 public class Main {
     public static void main(String[] args) {
-        MacOS macUser = new MacUser(); // объект MacOS
+        MacOS macUser = new MacUser(); // объект MacOS.MacOS
         Windows11 programming = new VirtualMachine(macUser);
+        Windows11 videoStudio = new VirtualMachine(macUser);
+        Windows11 audioStudio = new VirtualMachine(macUser);
         App app = new App();
-        app.ios(programming);
+        Video video = new Video();
+        Audio audio = new Audio();
+        app.xcode(programming);
+        audio.logicPro(audioStudio);
+        video.finalCutPro(videoStudio);
     }
 }
 
-interface Windows11 {
-    void getProgramming();
-}
-
-interface MacOS {
-    void getSwift();
-}
-
-class VirtualMachine implements Windows11 {
-    MacOS macOS;
-
-    public VirtualMachine(MacOS macOS) {
-        this.macOS = macOS;
-    }
-
-    @Override
-    public void getProgramming() {
-        macOS.getSwift();
-    }
-}
-
-class MacUser implements MacOS {
-    @Override
-    public void getSwift() {
-        System.out.println("Programming on Swift");
-    }
-}
-
-class App {
-    public void ios(Windows11 programming) {
-        programming.getProgramming();
-    }
-}
