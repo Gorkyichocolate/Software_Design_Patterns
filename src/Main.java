@@ -1,73 +1,11 @@
-interface Learn{
-    void learning();
-}
-
-class Java implements Learn{
-    public void learning(){
-        System.out.println("Java");
-    }
-}
-
-class Python implements Learn{
-    public void learning(){
-        System.out.println("Python");
-    }
-}
-
-class Javascript implements Learn{
-    public void learning(){
-        System.out.println("Javascript");
-    }
-}
-
-abstract class Themes{
-    protected Learn learn;
-
-    public Themes(Learn learn){
-        this.learn = learn;
-    }
-
-    abstract void studying();
-}
-
-class OOP extends Themes{
-    public OOP(Learn learn){
-        super(learn);
-    }
-
-    @Override
-    void studying(){
-        System.out.println("OOP");
-        learn.learning();
-    }
-
-}
-
-class Libraries extends Themes{
-    public Libraries(Learn learn){
-        super(learn);
-    }
-
-    @Override
-    void studying(){
-        System.out.println("Libraries");
-        learn.learning();
-    }
-
-}
-
-class Frameworks extends Themes{
-    public Frameworks(Learn learn){
-        super(learn);
-    }
-
-    @Override
-    void studying(){
-        System.out.println("Frameworks");
-        learn.learning();
-    }
-
-}
+import Bridge.Learn;
+import Bridge.Themes;
+import Languages.Java;
+import Languages.Javascript;
+import Languages.Python;
+import Themes.Frameworks;
+import Themes.Libraries;
+import Themes.OOP;
 
 public class Main {
     public static void main(String[] args) {
@@ -89,14 +27,6 @@ public class Main {
         frameworksJS.studying();
         System.out.println();
 
-
-        Themes oopPython = new OOP(python);
-        oopPython.studying();
-        System.out.println();
-
-
-        Themes librariesJava = new Libraries(java);
-        librariesJava.studying();
     }
 }
 
