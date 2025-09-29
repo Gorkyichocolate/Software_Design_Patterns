@@ -1,75 +1,107 @@
-interface Laptop {
-    void doSomething();
+interface Learn{
+    void learning();
 }
 
-class WindowsLaptop implements Laptop {
-    @Override
-    public void doSomething() {
-        System.out.println("Windows OS");
+class Java implements Learn{
+    public void learning(){
+        System.out.println("Java");
     }
 }
 
-class MacLaptop implements Laptop {
-    @Override
-    public void doSomething() {
-        System.out.println("macOS");
+class Python implements Learn{
+    public void learning(){
+        System.out.println("Python");
     }
 }
 
-
-abstract class TypeOfLaptop {
-    protected Laptop laptop;
-
-    public TypeOfLaptop(Laptop laptop) {
-        this.laptop = laptop;
-    }
-
-    public abstract void doSomething();
-}
-
-
-class GamingLaptop extends TypeOfLaptop {
-    public GamingLaptop(Laptop laptop) {
-        super(laptop);
-    }
-
-    @Override
-    public void doSomething() {
-        System.out.println("Playing Game");
-        laptop.doSomething();
+class Javascript implements Learn{
+    public void learning(){
+        System.out.println("Javascript");
     }
 }
 
-class UltrabookLaptop extends TypeOfLaptop {
-    public UltrabookLaptop(Laptop laptop) {
-        super(laptop);
+abstract class Themes{
+    protected Learn learn;
+
+    public Themes(Learn learn){
+        this.learn = learn;
+    }
+
+    abstract void studying();
+}
+
+class OOP extends Themes{
+    public OOP(Learn learn){
+        super(learn);
     }
 
     @Override
-    public void doSomething() {
-        System.out.println("Studying");
-        laptop.doSomething();
+    void studying(){
+        System.out.println("OOP");
+        learn.learning();
     }
+
 }
 
-class OfficeLaptop extends TypeOfLaptop {
-    public OfficeLaptop(Laptop laptop) {
-        super(laptop);
+class Libraries extends Themes{
+    public Libraries(Learn learn){
+        super(learn);
     }
 
     @Override
-    public void doSomething() {
-        System.out.println("Working");
-        laptop.doSomething();
+    void studying(){
+        System.out.println("Libraries");
+        learn.learning();
     }
+
+}
+
+class Frameworks extends Themes{
+    public Frameworks(Learn learn){
+        super(learn);
+    }
+
+    @Override
+    void studying(){
+        System.out.println("Frameworks");
+        learn.learning();
+    }
+
 }
 
 public class Main {
     public static void main(String[] args) {
-        TypeOfLaptop gamingWin = new GamingLaptop(new WindowsLaptop());
-        gamingWin.doSomething();
 
-        TypeOfLaptop ultraMac = new UltrabookLaptop(new MacLaptop());
-        ultraMac.doSomething();
+        Learn java = new Java();
+        Themes oopJava = new OOP(java);
+        oopJava.studying();
+        System.out.println();
+
+
+        Learn python = new Python();
+        Themes librariesPython = new Libraries(python);
+        librariesPython.studying();
+        System.out.println();
+
+
+        Learn javascript = new Javascript();
+        Themes frameworksJS = new Frameworks(javascript);
+        frameworksJS.studying();
+        System.out.println();
+
+
+        Themes oopPython = new OOP(python);
+        oopPython.studying();
+        System.out.println();
+
+
+        Themes librariesJava = new Libraries(java);
+        librariesJava.studying();
     }
 }
+
+
+
+
+
+
