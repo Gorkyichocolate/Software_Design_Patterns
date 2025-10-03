@@ -1,3 +1,5 @@
+package Patterns;
+
 public class PCDecorater {
     public static void main(String[] args){
         PersonalComputer pc = new PC();
@@ -14,7 +16,7 @@ interface PersonalComputer{
 class PC implements PersonalComputer{
     @Override
     public void work() {
-        System.out.println("PC is working");
+        System.out.println("Patterns.PC is working");
     }
 }
 
@@ -39,7 +41,7 @@ class WebCamera extends PCDecorator{
     @Override
     public void work() {
         super.work();
-        System.out.println("WebCamera is working");
+        System.out.println("Patterns.WebCamera is working");
     }
 }
 
@@ -50,7 +52,7 @@ class Monitor extends PCDecorator{
     @Override
     public void work() {
         super.work();
-        System.out.println("Monitor is working");
+        System.out.println("Patterns.Monitor is working");
     }
 }
 
@@ -61,7 +63,7 @@ class Keyboard extends PCDecorator{
     @Override
     public void work() {
         super.work();
-        System.out.println("Keyboard is working");
+        System.out.println("Patterns.Keyboard is working");
 
     }
 }
@@ -73,7 +75,7 @@ class Mouse extends PCDecorator{
     @Override
     public void work() {
         super.work();
-        System.out.println("Mouse is working");
+        System.out.println("Patterns.Mouse is working");
 
     }
 }

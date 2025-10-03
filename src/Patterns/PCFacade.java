@@ -1,3 +1,5 @@
+package Patterns;
+
 public class PCFacade {
     public static void main(String[] args){
         PCFacadeClass pc = new PCFacadeClass();
@@ -25,7 +27,7 @@ class Ram{
 
 class Motherboard{
     void motherboard() {
-        System.out.println("Motherboard is working");
+        System.out.println("Patterns.Motherboard is working");
     }
 }
 
@@ -37,7 +39,7 @@ class Bios{
 
 class Memory{
     void memory() {
-        System.out.println("Memory is working");
+        System.out.println("Patterns.Memory is working");
     }
 }
 
