@@ -12,7 +12,6 @@ public class StudentPortalFacade{
     }
 
     public void startLearning(Course course) {
-        course.deliverContent();   // запускаем курс
         startLearning.startLearning();
     }
 
