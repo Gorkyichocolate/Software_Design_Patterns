@@ -1,151 +1,207 @@
 package Menu;
+
+import Course.*;
+import Decorators.*;
+import Facade.*;
+import java.sql.*;
 import java.util.Scanner;
 
 public class Menu {
-    private final Scanner scanner = new Scanner(System.in);
+    Scanner scanner = new Scanner(System.in);
+    Connection conn;
+    StudentPortalFacade portal = new StudentPortalFacade();
 
-    public void start() {
+    public Menu() throws SQLException {
+        conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "123456");
+    }
+
+    public void start() throws SQLException {
         int choice;
         do {
-            System.out.println("\n=== Главное Меню ===");
-            System.out.println("1. Регистрация студента");
-            System.out.println("2. Исключение студента");
-            System.out.println("3. Админ Панель");
-            System.out.println("0. Закрыть меню");
-            System.out.print("Выберите пункт: ");
-
+            System.out.println("1. registration (enroll in course)");
+            System.out.println("2. start learning");
+            System.out.println("3. complete");
+            System.out.println("4. remove student");
+            System.out.println("5. show all students");
+            System.out.println("0. end");
+            System.out.print("choose: ");
             choice = getChoice();
 
             switch (choice) {
-                case 1 -> registrationMenu();
-                case 2 -> exclusionMenu();
-                case 3 -> adminPanelMenu();
-                case 0 -> System.out.println("Программа завершена.");
-                default -> System.out.println("Ошибка выбора!");
+                case 1 -> registration();
+                case 2 -> startLearning();
+                case 3 -> completeCourse();
+                case 4 -> removeStudent();
+                case 5 -> showAllStudents();
+                case 0 -> System.out.println("end");
+                default -> System.out.println("error");
             }
         } while (choice != 0);
-
-        scanner.close();
     }
 
-    private void registrationMenu() {
-        System.out.println("\n=== Регистрация студента ===");
 
-        System.out.print("Введите имя студента: ");
-        String studentName = scanner.next();
+    private void registration() throws SQLException {
+        Course baseCourse = selectCourse();
+        if (baseCourse == null) return;
 
-        System.out.print("Введите курс: ");
-        String courseName = scanner.next();
+        System.out.print("write name: ");
+        String name = scanner.nextLine();
 
-        System.out.println("\nВыберите дополнения:");
-        System.out.println("1. Геймификация");
-        System.out.println("2. Добавление Ментора");
-        System.out.println("0. Без дополнений");
-        System.out.print("Ваш выбор: ");
-        int extra = getChoice();
+        System.out.print("add mentor? (y/n): ");
+        boolean mentor = scanner.nextLine().equalsIgnoreCase("y");
 
-        switch (extra) {
-            case 1 -> System.out.println("Студент " + studentName + " зарегистрирован на курс " + courseName + " с геймификацией.");
-            case 2 -> System.out.println("Студент " + studentName + " зарегистрирован на курс " + courseName + " с ментором.");
-            case 0 -> System.out.println("Студент " + studentName + " зарегистрирован без дополнений.");
-            default -> System.out.println("Ошибка выбора!");
+        System.out.print("add gamification? (y/n): ");
+        boolean gam = scanner.nextLine().equalsIgnoreCase("y");
+
+        String baseName = baseCourse.getClass().getSimpleName();
+
+        Course course = baseCourse;
+        if (mentor) course = new MentorSupport(course);
+        if (gam) course = new Gamification(course);
+
+        PreparedStatement ps = conn.prepareStatement(
+                "INSERT INTO students (name, course, gamification, mentoradd) VALUES (?, ?, ?, ?)");
+        ps.setString(1, name);
+        ps.setString(2, baseName);
+        ps.setBoolean(3, gam);
+        ps.setBoolean(4, mentor);
+        ps.executeUpdate();
+
+        portal.enrollInCourse(course);
+        System.out.println("student " + name + " enrolled in " + baseName);
+    }
+
+    private void startLearning() throws SQLException {
+        System.out.print("enter student id: ");
+        int id = getChoice();
+
+        PreparedStatement ps = conn.prepareStatement("SELECT * FROM students WHERE id = ?");
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            String name = rs.getString("name");
+            String courseName = rs.getString("course");
+            boolean gam = rs.getBoolean("gamification");
+            boolean ment = rs.getBoolean("mentoradd");
+
+            Course course = switch (courseName) {
+                case "ProgrammingCourse" -> new ProgrammingCourse();
+                case "MathCourse" -> new MathCourse();
+                case "LanguageCourse" -> new LanguageCourse();
+                default -> new ProgrammingCourse();
+            };
+
+            if (gam) course = new Gamification(course);
+            if (ment) course = new MentorSupport(course);
+
+            System.out.println(name + " is starting learning " + courseName + ":");
+            portal.startLearning(course);
+        } else {
+            System.out.println("student not found");
+        }
+    }
+
+    private void completeCourse() throws SQLException {
+        System.out.print("enter student id: ");
+        int id = getChoice();
+
+        PreparedStatement ps = conn.prepareStatement("SELECT * FROM students WHERE id = ?");
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            String name = rs.getString("name");
+            String courseName = rs.getString("course");
+            boolean gam = rs.getBoolean("gamification");
+            boolean ment = rs.getBoolean("mentoradd");
+
+            Course course = switch (courseName) {
+                case "ProgrammingCourse" -> new ProgrammingCourse();
+                case "MathCourse" -> new MathCourse();
+                case "LanguageCourse" -> new LanguageCourse();
+                default -> new ProgrammingCourse();
+            };
+
+            if (gam) course = new Gamification(course);
+            if (ment) course = new MentorSupport(course);
+            course = new Certificate(course);
+
+            StringBuilder info = new StringBuilder();
+            info.append("Certificate: ").append(name).append(" completed ").append(courseName);
+            if (ment && gam) info.append(" with Mentor and Gamification");
+            else if (ment) info.append(" with Mentor");
+            else if (gam) info.append(" with Gamification");
+
+            System.out.println(info);
+            portal.completeCourse(course);
+        } else {
+            System.out.println("student not found");
+        }
+    }
+
+    private void removeStudent() throws SQLException {
+        System.out.print("enter student id to remove: ");
+        int id = getChoice();
+
+        PreparedStatement ps = conn.prepareStatement("DELETE FROM students WHERE id = ?");
+        ps.setInt(1, id);
+        int rows = ps.executeUpdate();
+
+        if (rows > 0) {
+            System.out.println("student removed");
+        } else {
+            System.out.println("student not found");
+        }
+    }
+
+    private void showAllStudents() throws SQLException {
+        ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM students ORDER BY id");
+        System.out.println("ID | Name | Course | Mentor | Gamification");
+        System.out.println("-------------------------------------------");
+
+        boolean found = false;
+        while (rs.next()) {
+            found = true;
+            int id = rs.getInt("id");
+            String name = rs.getString("name");
+            String course = rs.getString("course");
+            boolean mentor = rs.getBoolean("mentoradd");
+            boolean gam = rs.getBoolean("gamification");
+
+            System.out.println(id + " | " + name + " | " + course + " | " + mentor + " | " + gam);
+        }
+
+        if (!found) {
+            System.out.println("no students found");
         }
     }
 
 
-    private void exclusionMenu() {
-        System.out.println("\n=== Исключение студента ===");
-        System.out.print("Введите имя студента: ");
-        String studentName = scanner.next();
+    private Course selectCourse() {
+        System.out.println("select course:");
+        System.out.println("1. Programming");
+        System.out.println("2. Math");
+        System.out.println("3. Language");
+        System.out.println("0. return");
+        System.out.print("choose: ");
+        int choice = getChoice();
+        scanner.nextLine();
 
-        System.out.print("Введите группу студента: ");
-        String groupName = scanner.next();
-
-        System.out.println("Студент " + studentName + " из группы " + groupName + " исключён из системы.");
-    }
-
-
-    private void adminPanelMenu() {
-        int choice;
-        do {
-            System.out.println("\n=== Админ Панель ===");
-            System.out.println("1. Добавление Преподавателей");
-            System.out.println("2. Добавление Группы");
-            System.out.println("3. Добавление Курса");
-            System.out.println("4. Удаление Группы");
-            System.out.println("5. Увольнение Преподавателя");
-            System.out.println("0. Назад");
-            System.out.print("Выберите действие: ");
-
-            choice = getChoice();
-
-            switch (choice) {
-                case 1 -> addTeacher();
-                case 2 -> addGroup();
-                case 3 -> addCourse();
-                case 4 -> removeGroup();
-                case 5 -> fireTeacher();
-                case 0 -> System.out.println("Возврат в главное меню...");
-                default -> System.out.println("Ошибка выбора!");
-            }
-        } while (choice != 0);
-    }
-
-    private void addTeacher() {
-        System.out.println("\n=== Добавление Преподавателя ===");
-        System.out.print("Введите имя преподавателя: ");
-        String teacherName = scanner.next();
-
-        System.out.print("Введите направление преподавателя: ");
-        String subject = scanner.next();
-
-        System.out.println("Преподаватель " + teacherName + " добавлен по направлению " + subject + ".");
-    }
-
-    private void addGroup() {
-        System.out.println("\n=== Добавление Группы ===");
-        System.out.print("Введите направление группы: ");
-        String groupDirection = scanner.next();
-
-        System.out.print("Введите имя преподавателя: ");
-        String teacherName = scanner.next();
-
-        System.out.println("Группа по направлению " + groupDirection + " добавлена. Преподаватель: " + teacherName + ".");
-    }
-
-    private void addCourse() {
-        System.out.println("\n=== Добавление Курса ===");
-        System.out.print("Введите название курса: ");
-        String courseName = scanner.next();
-
-        System.out.println("Курс '" + courseName + "' успешно добавлен.");
-    }
-
-    private void removeGroup() {
-        System.out.println("\n=== Удаление Группы ===");
-        System.out.print("Введите номер группы: ");
-        int groupNumber = getChoice();
-
-        System.out.println("Группа №" + groupNumber + " успешно удалена.");
-    }
-
-    private void fireTeacher() {
-        System.out.println("\n=== Увольнение Преподавателя ===");
-        System.out.print("Введите имя преподавателя: ");
-        String teacherName = scanner.next();
-
-        System.out.println("Преподаватель " + teacherName + " уволен из системы.");
+        return switch (choice) {
+            case 1 -> new ProgrammingCourse();
+            case 2 -> new MathCourse();
+            case 3 -> new LanguageCourse();
+            case 0 -> null;
+            default -> null;
+        };
     }
 
     private int getChoice() {
         while (!scanner.hasNextInt()) {
-            System.out.print("Ошибка! Введите число: ");
+            System.out.print("enter number: ");
             scanner.next();
         }
         return scanner.nextInt();
-    }
-
-    public static void main(String[] args) {
-        new Menu().start();
     }
 }
