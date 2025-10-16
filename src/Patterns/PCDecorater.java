@@ -1,3 +1,5 @@
+/*
+
 package Patterns;
 
 public class PCDecorater {
@@ -80,3 +82,4 @@ class Mouse extends PCDecorator{
     }
 }
 
+*/

@@ -1,3 +1,5 @@
+/*
+
 package Patterns;
 
 public class PCFacade {
@@ -61,3 +63,4 @@ class PCFacadeClass{
     }
 }
 
+*/

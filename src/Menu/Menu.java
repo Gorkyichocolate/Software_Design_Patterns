@@ -5,6 +5,7 @@ import Decorators.*;
 import Facade.*;
 import java.sql.*;
 import java.util.Scanner;
+import Builder.*;
 
 public class Menu {
     Scanner scanner = new Scanner(System.in);
@@ -18,7 +19,7 @@ public class Menu {
     public void start() throws SQLException {
         int choice;
         do {
-            System.out.println("\n===== Learning Management System =====");
+            System.out.println("===== Learning Management System =====");
             System.out.println("1. registration (enroll in course)");
             System.out.println("2. start learning (enter grades)");
             System.out.println("3. complete course (certificate)");
@@ -45,6 +46,7 @@ public class Menu {
     private void registration() throws SQLException {
         Course baseCourse = selectCourse();
         if (baseCourse == null) return;
+
         System.out.print("write name: ");
         String name = scanner.nextLine();
 
@@ -55,11 +57,11 @@ public class Menu {
         if (mentor) {
             mentorId = selectMentor(baseCourse.getClass().getSimpleName());
             if (mentorId == null) {
-                System.out.println("No available mentors for this course.");
+                System.out.println("No mentor found");
                 mentor = false;
+            } else {
+                scanner.nextLine();
             }
-
-            scanner.nextLine();
         }
 
         System.out.print("add gamification? (y/n): ");
@@ -71,6 +73,13 @@ public class Menu {
         if (mentor) course = new MentorSupport(course);
         if (gam) course = new Gamification(course);
 
+        Student student = new StudentImpl()
+                .setName(name)
+                .setCourseName(baseName)
+                .setMentor(mentor)
+                .setGamification(gam)
+                .build();
+
         PreparedStatement ps = conn.prepareStatement(
                 "INSERT INTO students (name, course, gamification, mentoradd, mentor_id) VALUES (?, ?, ?, ?, ?)");
         ps.setString(1, name);
@@ -81,11 +90,14 @@ public class Menu {
         ps.executeUpdate();
 
         portal.enrollInCourse(course);
+
         System.out.println("Student " + name + " enrolled in " + baseName +
                 (mentor ? " (with mentor)" : "") +
+                (mentor && gam ? " and" : "") +
                 (gam ? " (with gamification)" : ""));
-    }
 
+        student.printStudent();
+    }
 
 
     private void startLearning() throws SQLException {
@@ -115,7 +127,6 @@ public class Menu {
             System.out.println(name + " is starting learning " + courseName + ":");
             portal.startLearning(course);
 
-            // Ввод оценок и расчёт
             enterGrades(id, gam, ment);
         } else {
             System.out.println("student not found");
@@ -196,6 +207,7 @@ public class Menu {
         if (!found) System.out.println("no students found");
     }
 
+
     private Course selectCourse() {
         System.out.println("select course:");
         System.out.println("1. Programming");
@@ -210,6 +222,7 @@ public class Menu {
             case 1 -> new ProgrammingCourse();
             case 2 -> new MathCourse();
             case 3 -> new LanguageCourse();
+            case 0 -> ;
             default -> null;
         };
     }
@@ -230,6 +243,15 @@ public class Menu {
 
         System.out.print("choose mentor id: ");
         int mentorId = getChoice();
+
+        PreparedStatement check = conn.prepareStatement("SELECT COUNT(*) FROM mentors WHERE id = ?");
+        check.setInt(1, mentorId);
+        ResultSet checkRs = check.executeQuery();
+        checkRs.next();
+        if (checkRs.getInt(1) == 0) {
+            return null;
+        }
+
         return mentorId;
     }
 

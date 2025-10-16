@@ -63,7 +63,7 @@ interface PersonalComputerBuilder{
 }
 
 class PersonalComputerImpl implements PersonalComputerBuilder{
-    PersonalComputer personalComputer =  new PersonalComputer();
+    PersonalComputer personalComputer = new PersonalComputer();
 
     @Override
     public PersonalComputerBuilder setCPU(String CPU) {
