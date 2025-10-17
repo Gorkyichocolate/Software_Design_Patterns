@@ -99,10 +99,10 @@ public class Menu {
         student.printStudent();
     }
 
-
     private void startLearning() throws SQLException {
-        System.out.print("enter student id: ");
+        System.out.print("enter student id (0 to return): ");
         int id = getChoice();
+        if (id == 0) return;
 
         PreparedStatement ps = conn.prepareStatement("SELECT * FROM students WHERE id = ?");
         ps.setInt(1, id);
@@ -134,8 +134,9 @@ public class Menu {
     }
 
     private void completeCourse() throws SQLException {
-        System.out.print("enter student id: ");
+        System.out.print("enter student id (0 to return): ");
         int id = getChoice();
+        if (id == 0) return;
 
         PreparedStatement ps = conn.prepareStatement("SELECT * FROM students WHERE id = ?");
         ps.setInt(1, id);
@@ -175,8 +176,9 @@ public class Menu {
     }
 
     private void removeStudent() throws SQLException {
-        System.out.print("enter student id to remove: ");
+        System.out.print("enter student id to remove (0 to return): ");
         int id = getChoice();
+        if (id == 0) return;
 
         PreparedStatement ps = conn.prepareStatement("DELETE FROM students WHERE id = ?");
         ps.setInt(1, id);
@@ -207,24 +209,25 @@ public class Menu {
         if (!found) System.out.println("no students found");
     }
 
-
     private Course selectCourse() {
-        System.out.println("select course:");
-        System.out.println("1. Programming");
-        System.out.println("2. Math");
-        System.out.println("3. Language");
-        System.out.println("0. return");
-        System.out.print("choose: ");
-        int choice = getChoice();
-        scanner.nextLine();
+        while (true) {
+            System.out.println("select course:");
+            System.out.println("1. Programming");
+            System.out.println("2. Math");
+            System.out.println("3. Language");
+            System.out.println("0. return to main menu");
+            System.out.print("choose: ");
+            int choice = getChoice();
+            scanner.nextLine();
 
-        return switch (choice) {
-            case 1 -> new ProgrammingCourse();
-            case 2 -> new MathCourse();
-            case 3 -> new LanguageCourse();
-            case 0 -> ;
-            default -> null;
-        };
+            switch (choice) {
+                case 1 -> { return new ProgrammingCourse(); }
+                case 2 -> { return new MathCourse(); }
+                case 3 -> { return new LanguageCourse(); }
+                case 0 -> { return null; }
+                default -> System.out.println("invalid option, try again.");
+            }
+        }
     }
 
     private Integer selectMentor(String courseName) throws SQLException {
@@ -241,8 +244,9 @@ public class Menu {
 
         if (!hasMentors) return null;
 
-        System.out.print("choose mentor id: ");
+        System.out.print("choose mentor id (0 to cancel): ");
         int mentorId = getChoice();
+        if (mentorId == 0) return null;
 
         PreparedStatement check = conn.prepareStatement("SELECT COUNT(*) FROM mentors WHERE id = ?");
         check.setInt(1, mentorId);
