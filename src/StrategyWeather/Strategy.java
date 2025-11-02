@@ -1,5 +1,8 @@
 package StrategyWeather;
 
 public interface Strategy {
-    public void getType();
+    long getIntervalMillis();
+    String getIntervalName();
+
+    void getType();
 }

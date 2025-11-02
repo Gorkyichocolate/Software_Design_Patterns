@@ -8,7 +8,7 @@ public class Context {
     }
 
     public void getWeather(){
-        strategy.getType();
+        strategy.getIntervalName();
     }
 
 }

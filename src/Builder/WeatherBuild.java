@@ -1,5 +1,4 @@
 package Builder;
-import WeatherData.WeatherData;
 
 public class WeatherBuild {
     public static void main(String[] args) {

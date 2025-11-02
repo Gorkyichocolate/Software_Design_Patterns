@@ -1,13 +1,13 @@
 package Builder;
 
 public class Weather {
-    String city;
-    String country;
-    String date;
-    String weather;
-    String temperature;
-    String humidity;
-    String windSpeed;
+    public String city;
+    public String country;
+    public String date;
+    public String weather;
+    public String temperature;
+    public String humidity;
+    public String windSpeed;
 
     public void printWeather(){
         System.out.println("City: " + city);

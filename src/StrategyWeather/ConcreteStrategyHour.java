@@ -1,20 +1,19 @@
 package StrategyWeather;
 
-public class ConcreteStrategyDaily implements Strategy {
+public class ConcreteStrategyHour implements Strategy {
 
     @Override
     public long getIntervalMillis() {
-        return 24 * 60 * 60 * 1000;
+        return 60 * 60 * 1000;
     }
 
     @Override
     public String getIntervalName() {
-        return "Every Day";
+        return "Every Hour";
     }
 
     @Override
     public void getType() {
 
     }
-
 }

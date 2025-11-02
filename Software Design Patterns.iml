@@ -16,8 +16,10 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="amqp-client-5.16.0" level="project" />
     <orderEntry type="library" name="slf4j-simple-2.0.7" level="project" />
     <orderEntry type="library" name="slf4j-api-2.0.7" level="project" />
+    <orderEntry type="library" name="commons-logging-1.2" level="project" />
+    <orderEntry type="library" name="telegrambots-6.9.7.1-jar-with-dependencies" level="project" />
+    <orderEntry type="library" name="amqp-client-5.16.0" level="project" />
   </component>
 </module>
