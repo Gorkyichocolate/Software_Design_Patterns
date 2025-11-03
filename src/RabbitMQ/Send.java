@@ -30,7 +30,7 @@ public class Send {
             initialize();
         }
         channel.basicPublish("", REQUEST_QUEUE, null, city.getBytes(StandardCharsets.UTF_8));
-        System.out.println("Sent weather request for city: " + city);
+        System.out.println("Sent weather request city: " + city);
     }
 
     public static void close() throws Exception {
@@ -39,8 +39,7 @@ public class Send {
     }
 
     public static void main(String[] args) throws Exception {
-        initialize();
-
+        initialize();   
         Scanner scanner = new Scanner(System.in);
         System.out.print("Введите город: ");
         String city = scanner.nextLine();

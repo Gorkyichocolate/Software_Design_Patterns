@@ -29,8 +29,6 @@ public class Recv {
 
             channel.queueDeclare(QUEUE_NAME, false, false, false, null);
 
-            System.out.println("Waiting for weather messages...");
-
             DeliverCallback deliverCallback = (tag, delivery) -> {
                 String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
                 System.out.println("Received weather data: " + message);
