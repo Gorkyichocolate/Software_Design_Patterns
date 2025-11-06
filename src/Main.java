@@ -1,5 +1,10 @@
+import Visitor.*;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        Animal animal = new Dog();
+
+
+        animal.doJob(new ConcreteVisitor());
     }
 }
