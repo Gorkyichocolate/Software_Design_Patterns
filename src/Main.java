@@ -2,9 +2,12 @@ import Visitor.*;
 
 public class Main {
     public static void main(String[] args) {
-        Animal animal = new Dog();
+        Teachers daa = new DAA();
+        Teachers sdp = new SDP();
+        Teachers frontend = new Frontend();
 
-
-        animal.doJob(new ConcreteVisitor());
+        daa.doJob(new ConcreteVisitor());
+        sdp.doJob(new ConcreteVisitor());
+        frontend.doJob(new ConcreteVisitor());
     }
 }

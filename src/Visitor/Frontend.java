@@ -1,8 +1,8 @@
 package Visitor;
 
-public class Dog implements Animal {
+public class Frontend implements Teachers {
     @Override
     public void doJob(Visitor visitor) {
-        visitor.doDog();
+        visitor.doWT();
     }
 }

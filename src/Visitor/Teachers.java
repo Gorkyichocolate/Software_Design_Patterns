@@ -1,5 +1,5 @@
 package Visitor;
 
-public interface Animal{
+public interface Teachers {
     public void doJob(Visitor visitor);
 }

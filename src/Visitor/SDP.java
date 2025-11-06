@@ -1,8 +1,8 @@
 package Visitor;
 
-public class Cat implements  Animal{
+public class SDP implements Teachers {
     @Override
     public void doJob(Visitor visitor) {
-        visitor.doCat();
+        visitor.doSDP();
     }
 }

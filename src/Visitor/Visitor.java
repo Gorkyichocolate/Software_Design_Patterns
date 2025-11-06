@@ -1,6 +1,7 @@
 package Visitor;
 
 public interface Visitor {
-    void doDog();
-    void doCat();
+    void doSDP();
+    void doDAA();
+    void doWT();
 }
