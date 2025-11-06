@@ -1,5 +1,5 @@
 package Visitor;
 
 public interface Teachers {
-    public void doJob(Visitor visitor);
+    public void doTeach(Visitor visitor);
 }

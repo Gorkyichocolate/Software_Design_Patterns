@@ -1,7 +1,7 @@
 package Visitor;
 
 public class DAA implements Teachers {    @Override
-    public void doJob(Visitor visitor) {
+    public void doTeach(Visitor visitor) {
         visitor.doDAA();
     }
 }

@@ -2,7 +2,7 @@ package Visitor;
 
 public class SDP implements Teachers {
     @Override
-    public void doJob(Visitor visitor) {
+    public void doTeach(Visitor visitor) {
         visitor.doSDP();
     }
 }
